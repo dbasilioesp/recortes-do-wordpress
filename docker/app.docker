@@ -1,0 +1,17 @@
+FROM wordpress:4.9.8
+
+ADD . /var/www/html
+
+# apt-get libraries
+RUN apt-get update
+RUN apt-get  -y install unzip git gettext
+
+# php composer
+RUN cd ~/ && curl -sS https://getcomposer.org/installer -o composer-setup.php
+RUN cd ~/ && php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+
+# wordpress plugins
+RUN composer update --no-plugins --no-scripts
+
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
